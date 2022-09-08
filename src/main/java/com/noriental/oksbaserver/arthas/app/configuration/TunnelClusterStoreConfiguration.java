@@ -1,9 +1,8 @@
 package com.noriental.oksbaserver.arthas.app.configuration;
 
-import com.alibaba.arthas.tunnel.server.app.configuration.TunnelClusterStoreConfiguration.RedisTunnelClusterStoreConfiguration;
-import com.alibaba.arthas.tunnel.server.cluster.InMemoryClusterStore;
-import com.alibaba.arthas.tunnel.server.cluster.RedisTunnelClusterStore;
-import com.alibaba.arthas.tunnel.server.cluster.TunnelClusterStore;
+import com.noriental.oksbaserver.arthas.cluster.InMemoryClusterStore;
+import com.noriental.oksbaserver.arthas.cluster.RedisTunnelClusterStore;
+import com.noriental.oksbaserver.arthas.cluster.TunnelClusterStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
@@ -25,7 +24,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  */
 @Configuration
 @AutoConfigureAfter(value = { RedisAutoConfiguration.class, CacheAutoConfiguration.class })
-@Import(RedisTunnelClusterStoreConfiguration.class)
+@Import(TunnelClusterStoreConfiguration.RedisTunnelClusterStoreConfiguration.class)
 public class TunnelClusterStoreConfiguration {
 
     @Bean

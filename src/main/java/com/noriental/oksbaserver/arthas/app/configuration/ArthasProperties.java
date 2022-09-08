@@ -1,6 +1,5 @@
 package com.noriental.oksbaserver.arthas.app.configuration;
 
-import com.alibaba.arthas.tunnel.server.utils.InetAddressUtil;
 import com.taobao.arthas.common.ArthasConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

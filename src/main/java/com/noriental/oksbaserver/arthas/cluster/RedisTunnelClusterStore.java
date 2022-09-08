@@ -1,7 +1,7 @@
 package com.noriental.oksbaserver.arthas.cluster;
 
-import com.alibaba.arthas.tunnel.server.AgentClusterInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.noriental.oksbaserver.arthas.AgentClusterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;

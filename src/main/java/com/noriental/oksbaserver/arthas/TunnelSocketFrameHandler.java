@@ -4,7 +4,6 @@ package com.noriental.oksbaserver.arthas;
 import com.alibaba.arthas.tunnel.common.MethodConstants;
 import com.alibaba.arthas.tunnel.common.SimpleHttpResponse;
 import com.alibaba.arthas.tunnel.common.URIConstans;
-import com.alibaba.arthas.tunnel.server.utils.HttpUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -26,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.noriental.oksbaserver.arthas.app.configuration.HttpUtils;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
@@ -46,9 +46,9 @@ public class TunnelSocketFrameHandler extends SimpleChannelInboundHandler<WebSoc
 
     private final static Logger logger = LoggerFactory.getLogger(TunnelSocketFrameHandler.class);
 
-    private com.alibaba.arthas.tunnel.server.TunnelServer tunnelServer;
+    private TunnelServer tunnelServer;
 
-    public TunnelSocketFrameHandler(com.alibaba.arthas.tunnel.server.TunnelServer tunnelServer) {
+    public TunnelSocketFrameHandler(TunnelServer tunnelServer) {
         this.tunnelServer = tunnelServer;
     }
 
@@ -139,7 +139,7 @@ public class TunnelSocketFrameHandler extends SimpleChannelInboundHandler<WebSoc
 
         logger.info("try to connect to arthas agent, id: " + agentId.get(0));
 
-        Optional<com.alibaba.arthas.tunnel.server.AgentInfo> findAgent = tunnelServer.findAgent(agentId.get(0));
+        Optional<AgentInfo> findAgent = tunnelServer.findAgent(agentId.get(0));
 
         if (findAgent.isPresent()) {
             ChannelHandlerContext agentCtx = findAgent.get().getChannelHandlerContext();
@@ -155,7 +155,7 @@ public class TunnelSocketFrameHandler extends SimpleChannelInboundHandler<WebSoc
 
             logger.info("startTunnel response: " + uri);
 
-            com.alibaba.arthas.tunnel.server.ClientConnectionInfo clientConnectionInfo = new com.alibaba.arthas.tunnel.server.ClientConnectionInfo();
+            ClientConnectionInfo clientConnectionInfo = new ClientConnectionInfo();
             SocketAddress remoteAddress = tunnelSocketCtx.channel().remoteAddress();
             if (remoteAddress instanceof InetSocketAddress) {
                 InetSocketAddress inetSocketAddress = (InetSocketAddress) remoteAddress;
@@ -176,12 +176,12 @@ public class TunnelSocketFrameHandler extends SimpleChannelInboundHandler<WebSoc
                         // outboundChannel is form arthas agent
                         outboundChannel.pipeline().removeLast();
 
-                        outboundChannel.pipeline().addLast(new com.alibaba.arthas.tunnel.server.RelayHandler(tunnelSocketCtx.channel()));
-                        tunnelSocketCtx.pipeline().addLast(new com.alibaba.arthas.tunnel.server.RelayHandler(outboundChannel));
+                        outboundChannel.pipeline().addLast(new RelayHandler(tunnelSocketCtx.channel()));
+                        tunnelSocketCtx.pipeline().addLast(new RelayHandler(outboundChannel));
                     } else {
                         logger.error("wait for agent connect error. agentId: {}, clientConnectionId: {}", agentId,
                                 clientConnectionId);
-                        com.alibaba.arthas.tunnel.server.ChannelUtils.closeOnFlush(agentCtx.channel());
+                        ChannelUtils.closeOnFlush(agentCtx.channel());
                     }
                 }
             });
@@ -253,7 +253,7 @@ public class TunnelSocketFrameHandler extends SimpleChannelInboundHandler<WebSoc
                 .queryParam(URIConstans.METHOD, MethodConstants.AGENT_REGISTER).queryParam(URIConstans.ID, id).build()
                 .encode().toUri();
 
-        com.alibaba.arthas.tunnel.server.AgentInfo info = new com.alibaba.arthas.tunnel.server.AgentInfo();
+        AgentInfo info = new AgentInfo();
 
         // 前面可能有nginx代理
         HttpHeaders headers = handshake.requestHeaders();
@@ -292,10 +292,10 @@ public class TunnelSocketFrameHandler extends SimpleChannelInboundHandler<WebSoc
     }
 
     private void openTunnel(ChannelHandlerContext ctx, String clientConnectionId) {
-        Optional<com.alibaba.arthas.tunnel.server.ClientConnectionInfo> infoOptional = this.tunnelServer.findClientConnection(clientConnectionId);
+        Optional<ClientConnectionInfo> infoOptional = this.tunnelServer.findClientConnection(clientConnectionId);
 
         if (infoOptional.isPresent()) {
-            com.alibaba.arthas.tunnel.server.ClientConnectionInfo info = infoOptional.get();
+            ClientConnectionInfo info = infoOptional.get();
             logger.info("openTunnel clientConnectionId:" + clientConnectionId);
 
             Promise<Channel> promise = info.getPromise();

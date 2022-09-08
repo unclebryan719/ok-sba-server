@@ -1,7 +1,8 @@
 package com.noriental.oksbaserver.arthas.endpoint;
 
-import com.alibaba.arthas.tunnel.server.TunnelServer;
-import com.alibaba.arthas.tunnel.server.app.configuration.ArthasProperties;
+
+import com.noriental.oksbaserver.arthas.TunnelServer;
+import com.noriental.oksbaserver.arthas.app.configuration.ArthasProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;

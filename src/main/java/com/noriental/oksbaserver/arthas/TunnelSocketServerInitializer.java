@@ -19,9 +19,9 @@ public class TunnelSocketServerInitializer extends ChannelInitializer<SocketChan
 
     private final SslContext sslCtx;
 
-    private com.alibaba.arthas.tunnel.server.TunnelServer tunnelServer;
+    private TunnelServer tunnelServer;
 
-    public TunnelSocketServerInitializer(com.alibaba.arthas.tunnel.server.TunnelServer tunnelServer, SslContext sslCtx) {
+    public TunnelSocketServerInitializer(TunnelServer tunnelServer, SslContext sslCtx) {
         this.sslCtx = sslCtx;
         this.tunnelServer = tunnelServer;
     }

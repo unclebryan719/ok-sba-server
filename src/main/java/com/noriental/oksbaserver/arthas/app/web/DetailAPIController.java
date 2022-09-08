@@ -1,8 +1,8 @@
 package com.noriental.oksbaserver.arthas.app.web;
 
-import com.alibaba.arthas.tunnel.server.AgentClusterInfo;
-import com.alibaba.arthas.tunnel.server.app.configuration.ArthasProperties;
-import com.alibaba.arthas.tunnel.server.cluster.TunnelClusterStore;
+import com.noriental.oksbaserver.arthas.AgentClusterInfo;
+import com.noriental.oksbaserver.arthas.app.configuration.ArthasProperties;
+import com.noriental.oksbaserver.arthas.cluster.TunnelClusterStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class DetailAPIController {
     @RequestMapping("/api/tunnelAgentInfo")
     @ResponseBody
     public Map<String, AgentClusterInfo> tunnelAgentIds(@RequestParam(value = "app", required = true) String appName,
-            HttpServletRequest request, Model model) {
+                                                        HttpServletRequest request, Model model) {
         if (!arthasProperties.isEnableDetailPages()) {
             throw new IllegalAccessError("not allow");
         }

@@ -1,7 +1,7 @@
 package com.noriental.oksbaserver.arthas;
 
 import com.alibaba.arthas.tunnel.common.SimpleHttpResponse;
-import com.alibaba.arthas.tunnel.server.cluster.TunnelClusterStore;
+import com.noriental.oksbaserver.arthas.cluster.TunnelClusterStore;
 import com.taobao.arthas.common.ArthasConstants;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -40,7 +40,7 @@ public class TunnelServer {
 
     private Map<String, AgentInfo> agentInfoMap = new ConcurrentHashMap<>();
 
-    private Map<String, com.alibaba.arthas.tunnel.server.ClientConnectionInfo> clientConnectionInfoMap = new ConcurrentHashMap<>();
+    private Map<String, ClientConnectionInfo> clientConnectionInfoMap = new ConcurrentHashMap<>();
     
     /**
      * 记录 proxy request
@@ -133,15 +133,15 @@ public class TunnelServer {
         return agentInfo;
     }
     
-    public Optional<com.alibaba.arthas.tunnel.server.ClientConnectionInfo> findClientConnection(String id) {
+    public Optional<ClientConnectionInfo> findClientConnection(String id) {
         return Optional.ofNullable(this.clientConnectionInfoMap.get(id));
     }
 
-    public void addClientConnectionInfo(String id, com.alibaba.arthas.tunnel.server.ClientConnectionInfo clientConnectionInfo) {
+    public void addClientConnectionInfo(String id, ClientConnectionInfo clientConnectionInfo) {
         clientConnectionInfoMap.put(id, clientConnectionInfo);
     }
 
-    public com.alibaba.arthas.tunnel.server.ClientConnectionInfo removeClientConnectionInfo(String id) {
+    public ClientConnectionInfo removeClientConnectionInfo(String id) {
         return this.clientConnectionInfoMap.remove(id);
     }
     
@@ -198,11 +198,11 @@ public class TunnelServer {
         this.agentInfoMap = agentInfoMap;
     }
 
-    public Map<String, com.alibaba.arthas.tunnel.server.ClientConnectionInfo> getClientConnectionInfoMap() {
+    public Map<String, ClientConnectionInfo> getClientConnectionInfoMap() {
         return clientConnectionInfoMap;
     }
 
-    public void setClientConnectionInfoMap(Map<String, com.alibaba.arthas.tunnel.server.ClientConnectionInfo> clientConnectionInfoMap) {
+    public void setClientConnectionInfoMap(Map<String, ClientConnectionInfo> clientConnectionInfoMap) {
         this.clientConnectionInfoMap = clientConnectionInfoMap;
     }
 

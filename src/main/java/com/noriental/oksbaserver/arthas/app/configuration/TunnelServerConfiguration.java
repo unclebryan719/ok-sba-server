@@ -1,7 +1,7 @@
 package com.noriental.oksbaserver.arthas.app.configuration;
 
-import com.alibaba.arthas.tunnel.server.TunnelServer;
-import com.alibaba.arthas.tunnel.server.cluster.TunnelClusterStore;
+import com.noriental.oksbaserver.arthas.TunnelServer;
+import com.noriental.oksbaserver.arthas.cluster.TunnelClusterStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

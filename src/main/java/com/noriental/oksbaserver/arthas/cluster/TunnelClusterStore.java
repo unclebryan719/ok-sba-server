@@ -1,6 +1,7 @@
 package com.noriental.oksbaserver.arthas.cluster;
 
-import com.alibaba.arthas.tunnel.server.AgentClusterInfo;
+
+import com.noriental.oksbaserver.arthas.AgentClusterInfo;
 
 import java.util.Collection;
 import java.util.Map;

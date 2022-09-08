@@ -1,4 +1,4 @@
-package com.noriental.oksbaserver.arthas.utils;
+package com.noriental.oksbaserver.arthas.app.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

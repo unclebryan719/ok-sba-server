@@ -1,6 +1,6 @@
 package com.noriental.oksbaserver.arthas.endpoint;
 
-import com.alibaba.arthas.tunnel.server.app.configuration.ArthasProperties;
+import com.noriental.oksbaserver.arthas.app.configuration.ArthasProperties;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

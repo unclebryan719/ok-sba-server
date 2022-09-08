@@ -1,4 +1,4 @@
-package com.noriental.oksbaserver.arthas.utils;
+package com.noriental.oksbaserver.arthas.app.configuration;
 
 import io.netty.handler.codec.http.HttpHeaders;
 

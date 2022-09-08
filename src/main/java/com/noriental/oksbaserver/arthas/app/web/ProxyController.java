@@ -3,13 +3,14 @@ package com.noriental.oksbaserver.arthas.app.web;
 import com.alibaba.arthas.tunnel.common.MethodConstants;
 import com.alibaba.arthas.tunnel.common.SimpleHttpResponse;
 import com.alibaba.arthas.tunnel.common.URIConstans;
-import com.alibaba.arthas.tunnel.server.AgentInfo;
-import com.alibaba.arthas.tunnel.server.TunnelServer;
+import com.noriental.oksbaserver.arthas.AgentInfo;
+import com.noriental.oksbaserver.arthas.TunnelServer;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import io.netty.util.concurrent.Promise;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,11 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * 代理http请求到具体的 arthas agent里
- * 
+ *
  * @author hengyunabc 2020-10-22
  *
  */
+@RequestMapping(value = {"/extensions/arthas", "/"})
 @Controller
 public class ProxyController {
     private final static Logger logger = LoggerFactory.getLogger(ProxyController.class);
@@ -46,9 +48,11 @@ public class ProxyController {
     @RequestMapping(value = "/proxy/{agentId}/**")
     @ResponseBody
     public ResponseEntity<?> execute(@PathVariable(name = "agentId", required = true) String agentId,
-            HttpServletRequest request) throws InterruptedException, ExecutionException, TimeoutException {
+                                     HttpServletRequest request) throws InterruptedException, ExecutionException, TimeoutException {
 
         String fullPath = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        fullPath = StringUtils.replace(fullPath, "/extensions/arthas", "");
+        logger.info("fullPath:{}", fullPath);
         String targetUrl = fullPath.substring("/proxy/".length() + agentId.length());
 
         logger.info("http proxy, agentId: {}, targetUrl: {}", agentId, targetUrl);

@@ -1,6 +1,5 @@
 package com.noriental.oksbaserver.arthas.app.configuration;
 
-import com.alibaba.arthas.tunnel.server.app.configuration.ArthasProperties.EmbeddedRedis;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,7 +21,7 @@ public class EmbeddedRedisConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "arthas", name = { "embedded-redis.enabled" })
     public RedisServer embeddedRedisServer(ArthasProperties arthasProperties) {
-        EmbeddedRedis embeddedRedis = arthasProperties.getEmbeddedRedis();
+        ArthasProperties.EmbeddedRedis embeddedRedis = arthasProperties.getEmbeddedRedis();
 
         RedisServerBuilder builder = RedisServer.builder().port(embeddedRedis.getPort()).bind(embeddedRedis.getHost());
 

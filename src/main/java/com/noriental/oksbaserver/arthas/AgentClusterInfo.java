@@ -21,7 +21,7 @@ public class AgentClusterInfo {
 
     }
 
-    public AgentClusterInfo(com.alibaba.arthas.tunnel.server.AgentInfo agentInfo, String clientConnectHost) {
+    public AgentClusterInfo(AgentInfo agentInfo, String clientConnectHost) {
         this.host = agentInfo.getHost();
         this.port = agentInfo.getPort();
         this.arthasVersion = agentInfo.getArthasVersion();
