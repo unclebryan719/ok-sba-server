@@ -1,0 +1,54 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ok-sba-server
+  ## 集成了spring security安全组件，定义登录SBA的账号密码，
+  ## 后期注册到SBA的客户端也要设置此权限才能注册进来
+  security:
+    user:
+      name: admin
+      password: admin
+  boot:
+    admin:
+      # SBA添加外链扩展页面，此处外链跳转Arthas控制台
+      ui:
+        external-views:
+          - label: "Arthas Console"
+            url: "./extensions/arthas/arthas.html"
+            order: 1900
+  # Arthas的缓存策略
+  cache:
+    type: caffeine
+    cache-names: inMemoryClusterCache
+    caffeine:
+      spec: maximumSize=3000,expireAfterAccess=3600s
+
+# 监控所有页面
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  ## 关闭rabbitmq，redis，es 健康检查
+  health:
+    redis:
+      enabled: false
+    rabbit:
+      enabled: false
+    elasticsearch:
+      enabled: false
+  # 总是显示服务健康细节
+  endpoint:
+    health:
+      show-details: always
+# arthas tunnel-server监听地址端口
+arthas:
+  server:
+    host: 0.0.0.0
+    port: ${PORT:7777}
+  enableDetailPages: true
