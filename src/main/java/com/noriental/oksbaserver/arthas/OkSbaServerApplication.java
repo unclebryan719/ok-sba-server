@@ -1,4 +1,4 @@
-package com.noriental.oksbaserver;
+package com.noriental.oksbaserver.arthas;
 
 import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
