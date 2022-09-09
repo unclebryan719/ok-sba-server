@@ -1,7 +1,9 @@
 var ws;
 var xterm;
+const DEFAULT_SCROLL_BACK = 1000
+const MAX_SCROLL_BACK = 9999999
+const MIN_SCROLL_BACK = 1
 
-/**有修改**/
 $(function () {
     var url = window.location.href;
     var ip = getUrlParam('ip');
@@ -17,10 +19,15 @@ $(function () {
         $('#port').val(port);
     }
     if (agentId != '' && agentId != null) {
-        $('#selectServer').val(agentId);
+        $('#agentId').val(agentId);
     }
 
-    // startConnect(true);
+    var iframe = getUrlParam('iframe');
+    if (iframe != null && iframe != 'false') {
+        $("nav").hide()
+    }
+
+    startConnect(true);
 });
 
 /** get params in url **/
@@ -78,29 +85,38 @@ function getTerminalSize () {
 }
 
 /** init websocket **/
-function initWs (ip, port, agentId) {
+function initWs (ip, port, path, agentId, targetServer) {
     var protocol= location.protocol === 'https:'  ? 'wss://' : 'ws://';
-    var path = protocol + ip + ':' + port + '/ws?method=connectArthas&id=' + agentId;
-    ws = new WebSocket(path);
+    var uri = protocol + ip + ':' + port + '/' + encodeURIComponent(path) + '?method=connectArthas&id=' + agentId;
+    if (targetServer != null) {
+        uri = uri + '&targetServer=' + encodeURIComponent(targetServer);
+    }
+    ws = new WebSocket(uri);
 }
 
 /** init xterm **/
-function initXterm (cols, rows) {
+function initXterm (cols, rows,scrollback) {
+    let scrollNumber = parseInt(scrollback,10)
     xterm = new Terminal({
         cols: cols,
         rows: rows,
-        screenReaderMode: true,
+        screenReaderMode: false,
         rendererType: 'canvas',
-        convertEol: true
+        convertEol: true,
+        scrollback: isValidNumber(scrollNumber) ? scrollNumber : DEFAULT_SCROLL_BACK
     });
 }
 
+function isValidNumber(scrollNumber){
+    return  scrollNumber >= MIN_SCROLL_BACK &&
+        scrollNumber <= MAX_SCROLL_BACK;
+}
 
-/** 有修改 begin connect **/
+/** begin connect **/
 function startConnect (silent) {
     var ip = $('#ip').val();
     var port = $('#port').val();
-    var agentId = $('#selectServer').val();
+    var agentId = $('#agentId').val();
     if (ip == '' || port == '') {
         alert('Ip or port can not be empty');
         return;
@@ -116,8 +132,16 @@ function startConnect (silent) {
         alert('Already connected');
         return;
     }
+    
+    var path = getUrlParam('path');
+    if (path == null) {
+        path = "ws";
+    }
+
+    var targetServer = getUrlParam('targetServer');
+
     // init webSocket
-    initWs(ip, port, agentId);
+    initWs(ip, port, path, agentId, targetServer);
     ws.onerror = function () {
         ws.close();
         ws = null;
@@ -134,8 +158,9 @@ function startConnect (silent) {
         var terminalSize = getTerminalSize()
         console.log('terminalSize')
         console.log(terminalSize)
+        let scrollback = getUrlParam('scrollback');
         // init xterm
-        initXterm(terminalSize.cols, terminalSize.rows)
+        initXterm(terminalSize.cols, terminalSize.rows,scrollback)
         ws.onmessage = function (event) {
             if (event.type === 'message') {
                 var data = event.data;
@@ -167,6 +192,10 @@ function disconnect () {
     } catch (e) {
         alert('No connection, please start connect first.');
     }
+}
+
+function updateArthasOutputLink() {
+    $('#arthasOutputA').prop("href", "proxy/" + $('#agentId').val() + "/arthas-output/")
 }
 
 /** full screen show **/

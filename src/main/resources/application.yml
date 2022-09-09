@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8888
 
 spring:
   application:
@@ -16,8 +16,11 @@ spring:
       ui:
         external-views:
           - label: "Arthas Console"
-            url: "./extensions/arthas/arthas.html"
+            url: "./extensions/arthas/index.html"
             order: 1900
+          - label: "AgentInfo"
+            url: "./extensions/arthas/apps.html"
+            order: 1901
   # Arthas的缓存策略
   cache:
     type: caffeine
